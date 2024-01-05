@@ -28,6 +28,8 @@ class Server:
             if self.HTTP_OPEN:
                 with open(constants.HTTP_SERVER2CLIENT, 'w') as pipeout:
                     pipeout.write(data)
+                    # every server response is logged 
+                    self.log(data)
             else:
                 print("There is no open pipe!")
         except OSError:
@@ -39,6 +41,10 @@ class Server:
                 return pipein.read()
         except OSError:
             print("error reading from pipe")
+
+    def log(self, data):
+        with open(self.log, 'a') as logfile:
+            logfile.write(data)
 
 
 if __name__ == "__main__":
