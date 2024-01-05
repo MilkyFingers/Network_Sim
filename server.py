@@ -55,7 +55,7 @@ if __name__ == "__main__":
     while True:
         try:
             print(s.readHTTP())
-            s.writeHTTP('301 not found')
+            s.writeHTTP(constants.HTTP_300_RESPONSE)
 
         except KeyboardInterrupt:
             s.closeHTTP()
