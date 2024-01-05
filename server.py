@@ -29,7 +29,7 @@ class Server:
                 with open(constants.HTTP_SERVER2CLIENT, 'w') as pipeout:
                     pipeout.write(data)
                     # every server response is logged 
-                    self.log(data)
+                    self.logger(data)
             else:
                 print("There is no open pipe!")
         except OSError:
@@ -42,9 +42,9 @@ class Server:
         except OSError:
             print("error reading from pipe")
 
-    def log(self, data):
+    def logger(self, data):
         with open(self.log, 'a') as logfile:
-            logfile.write(data)
+            logfile.write(data + '\n')
 
 
 if __name__ == "__main__":
@@ -52,17 +52,14 @@ if __name__ == "__main__":
     s = Server()
     s.openHTTP()
 
-    count = 0
+    while True:
+        try:
+            print(s.readHTTP())
+            s.writeHTTP('301 not found')
 
-    while count < 5:
-
-        print(s.readHTTP())
-
-        s.writeHTTP("response")
-
-        count += 1
-
-    s.closeHTTP()
+        except KeyboardInterrupt:
+            s.closeHTTP()
+            break
 
 
 
