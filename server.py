@@ -1,8 +1,5 @@
 import os, sys
 import constants
-from signal import signal, SIGPIPE, SIG_DFL
-
-signal(SIGPIPE,SIG_DFL) 
 
 class Server:
 
@@ -23,7 +20,7 @@ class Server:
         try:
             os.remove(constants.HTTP_SERVER2CLIENT)
             self.HTTP_OPEN = False
-        except:
+        except OSError:
             print("error closing pipe")
 
     def writeHTTP(self, data):
@@ -33,27 +30,19 @@ class Server:
                     pipeout.write(data)
             else:
                 print("There is no open pipe!")
-        except:
+        except OSError:
             print("error writing to pipe")
     
     def readHTTP(self):
         try:
             with open(constants.HTTP_CLIENT2SERVER, "r") as pipein:
                 return pipein.read()
-        except:
+        except OSError:
             print("error reading from pipe")
 
-    def cleanHTTPpipes(self):
-        try:
-            os.remove(constants.HTTP_SERVER2CLIENT)
-        except:
-            pass
 
 if __name__ == "__main__":
 
-    os.remove(constants.HTTP_CLIENT2SERVER)
-
-    os.mkfifo(constants.HTTP_CLIENT2SERVER)
     s = Server()
     s.openHTTP()
 
@@ -61,21 +50,14 @@ if __name__ == "__main__":
 
     while count < 5:
 
-        # first write from client
-        with open(constants.HTTP_CLIENT2SERVER, "w") as pipeoutclient:
-            pipeoutclient.write("GET")
-
         print(s.readHTTP())
 
         s.writeHTTP("response")
 
-        with open(constants.HTTP_SERVER2CLIENT, 'r') as pipeinclient:
-            print(pipeinclient.read())
-
         count += 1
 
     s.closeHTTP()
-    #os.remove(constants.HTTP_CLIENT2SERVER)
+
 
 
 
