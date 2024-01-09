@@ -6,7 +6,7 @@ def strtobin(string):
     return ''.join(format(x, 'b') for x in bytearray(string, 'utf-8'))
 
 
-http = "GET / HTTP/1.1\n Host: www.gollum.mordor/ring.txt"
+http = "GET / HTTP/1.1\nHost: www.gollum.mordor/ring.txt"
 
 tcp = f"{13370:016b}{80:016b}{0:032b}{128:032b}{5:04b}{0:04b}00010001{65535:016b}{0:016b}{0:016b}{strtobin(http)}"
 # Source port|Destination port|Sequence number|Ack number|Data offset|Reserved|Flags|Window size|Checksum|Urgent pointer|Payload
