@@ -12,6 +12,13 @@ class Server:
         self.ip = constants.SERVER_IP
         if not os.path.exists(constants.SERVER2CLIENT):
             os.mkfifo(constants.SERVER2CLIENT)
+        # the file we log all the data in
+        self.logfile = constants.SERVER_LOGS
+        # instantiate an instance for each layer in the OSI
+        self.app = server_HTTP()
+        self.transport = server_TCP()
+        self.network = server_IP()
+        self.link = server_ETHERNET()
 
     def read_pipe(self):
         with open(constants.SERVER2CLIENT, "r") as readpipe:
@@ -21,20 +28,24 @@ class Server:
     def write_pipe(self, data):
         with open(constants.CLIENT2SERVER, "w") as writepipe:
             writepipe.write(data)
+
+    def logger(self, data):
+        with open(self.logfile, "a") as logfile:
+            logfile.write(data)
     
     # this method will take an ethernet datagram and move it up the network stack. the return value is the application (http) response.
     # this return value is passed to down_stack which moves the data down the network stack and passes the final datagram to write_pipe
     def up_stack(self, data):
-        ip = server_ETHERNET.link_to_network(data)
-        tcp = server_IP.network_to_transport(ip)
-        http = server_TCP.transport_to_application(tcp)
-        response = server_HTTP.req_res(http)
+        ip = self.link.link_to_network(data)
+        tcp = self.network.network_to_transport(ip)
+        http = self.transport.transport_to_application(tcp)
+        response = self.app.req_res(http)
         return response 
     
     def down_stack(self, response):
-        tcp = server_TCP.transport_to_network(response)
-        ip = server_IP.network_to_link(tcp)
-        ethernet = server_ETHERNET.link_to_physical(ip)
+        tcp = self.transport.transport_to_network(response)
+        ip = self.network.network_to_link(tcp)
+        ethernet = self.link.link_to_physical(ip)
         return ethernet
 
     def shutdown(self):
