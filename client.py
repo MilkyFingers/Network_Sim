@@ -103,10 +103,10 @@ class Client:
         # IPv4
         # Version|IHL|DSCP|ECN|Total Length|Identification|Flags|Fragment offset|Time to Live(linux kernel 4.10+)|Protocol|Header checksum
         # |Source address|Destination address|Payload
-        ipHeader = f"{4:04b}{5:04b}{0:06b}{0:02b}{160 + len(payload):032b}{1:016b}010{0:013b}{64:08b}{6:08b}{0:016b}" \
+        ipHeader = f"{4:04b}{5:04b}{0:06b}{0:02b}{160 + len(payload):016b}{1:016b}010{0:013b}{64:08b}{6:08b}{0:016b}" \
                    f"{ip_to_Bin(self.ip)}{ip_to_Bin(constants.SERVER_IP)}"
         checksum = 2**16 - 1 - calculate_checksum(ipHeader) # ones complement of the ones complement sum
-        ipPacket = f"{4:04b}{5:04b}{0:06b}{0:02b}{160 + len(payload):032b}{1:016b}010{0:013b}{64:08b}{6:08b}{checksum:016b}" \
+        ipPacket = f"{4:04b}{5:04b}{0:06b}{0:02b}{160 + len(payload):016b}{1:016b}010{0:013b}{64:08b}{6:08b}{checksum:016b}" \
                    f"{ip_to_Bin(self.ip)}{ip_to_Bin(constants.SERVER_IP)}{payload}"
         self.log(ipPacket, "b", "IPv4")
         self.generateEthernetFrame(ipPacket)
