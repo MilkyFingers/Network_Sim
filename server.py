@@ -1,5 +1,9 @@
-import os, sys
-import constants, server_HTTP, server_TCP, server_IP, server_ETHERNET
+import os
+import constants
+from server_ETHERNET import ETHERNET
+from server_IP import IP
+from server_TCP import TCP
+from server_HTTP import HTTP
 
 """
 This class acts as the os. There are methods to control the reading and writing of data which is to simulate the physical layer of the OSI.
@@ -15,10 +19,10 @@ class Server:
         # the file we log all the data in
         self.logfile = constants.SERVER_LOGS
         # instantiate an instance for each layer in the OSI
-        self.app = server_HTTP()
-        self.transport = server_TCP()
-        self.network = server_IP()
-        self.link = server_ETHERNET()
+        self.app = HTTP()
+        self.transport = TCP()
+        self.network = IP()
+        self.link = ETHERNET()
 
     def read_pipe(self):
         with open(constants.SERVER2CLIENT, "r") as readpipe:

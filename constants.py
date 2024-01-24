@@ -1,5 +1,5 @@
 SERVER_IP = "192.168.1.0"
-SERVER_NAME = "networksimulation.com"
+SERVER_NAME = "www.networksimulation.com"
 SERVER_MAC = "02:00:00:00:00:00" # (locally administered unicast address)
 CLIENT_IP = "192.168.1.1"
 CLIENT_MAC = "02:00:00:00:00:01" # (locally administered unicast address)
@@ -22,7 +22,7 @@ def str_to_bin(string):
 def bin_to_str(b):
     return "".join(map(lambda byte: chr(int(byte, base=2)),[b[i:i+8] for i in range(0, len(b), 8)]))
 
-def ip_to_Bin(ip):
+def ip_to_bin(ip):
     return format(int("".join([format(int(ip), "08b") for ip in ip.split(".")]), base=2), "032b")
 
 def bin_to_ip(b):

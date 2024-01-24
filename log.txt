@@ -1,0 +1,73 @@
+These log files are broken into their respective categories. For example, the HTTP section contains the logs generated when TCP passes 
+a client request up to the application as well as when the server HTTP passes on a message to TCP. 
+I have prefixed logs that are travelling up the network stack with a '+' and logs going down the stack with a '-'. 
+
+As the code is not fully implemented and functional, I have made simplifications for the checksum and data fields in the log.
+
+Futhermore, all logs are formated (except HTTP which is plain text) so that header values are in decimal and are seperated
+by vertical columns '|'.
+
+Finally, all logs appear in chronological order. For example, the first log for TCP would show the inital values associated with 
+recieving the client SYN, the second would show the server respond with a SYN/ACK. 
+
+HTTP:
+
++ GET /ring.txt HTTP/1.1
+  HOST: www.networksimulation.com
+
+- HTTP/1.1 301 Moved Permanently
+  Location: /stock/rings/ring.txt
+
++ GET /wizzard.jpg HTTP/1.1
+  HOST: www.networksimulation.com
+
+- HTTP/1.1 301 Moved Permanently
+  Location: /images/magical/wizzard.jpg
+
+TCP:
+
++ | 13370 | 80 | 0 | 0 | 5 | 0 | 2 | 0 | check | 0 |
+
+- | 80 | 13370 | 0 | 0 | 5 | 0 | 18 | 0 | check | 0 |
+
++ | 13370 | 80 | 0 | 0 | 5 | 0 | 16 | 0 | check | 0 |
+
++ | 13370 | 80 | 0 | 0 | 5 | 0 | 16 | 0 | check | 0 | data |
+
+- | 80 | 13370 | 0 | 0 | 5 | 0 | 16 | 0 | check | 0 | data | 
+
++ | 13370 | 80 | 0 | 0 | 5 | 0 | 16 | 0 | check | 0 | data |
+
+- | 80 | 13370 | 0 | 0 | 5 | 0 | 16 | 0 | check | 0 | data |
+
+IP:
+
++ | 4 | 5 | 0 | 320 | 1 | 4 | 0 | 64 | 6 | check | 192.168.1.1 | 192.168.1.0 |  
+
+- | 4 | 5 | 0 | 320 | 1 | 4 | 0 | 64 | 6 | check | 192.168.1.0 | 192.168.1.1 |
+
++ | 4 | 5 | 0 | 320 | 1 | 4 | 0 | 64 | 6 | check | 192.168.1.1 | 192.168.1.0 |
+
++ | 4 | 5 | 0 | 428 | 1 | 4 | 0 | 64 | 6 | check | 192.168.1.1 | 192.168.1.0 |
+
+- | 4 | 5 | 0 | 432 | 1 | 4 | 0 | 64 | 6 | check | 192.168.1.0 | 192.168.1.1 | 
+
++ | 4 | 5 | 0 | 429 | 1 | 4 | 0 | 64 | 6 | check | 192.168.1.1 | 192.168.1.0 | 
+
+- | 4 | 5 | 0 | 430 | 1 | 4 | 0 | 64 | 6 | check | 192.168.1.0 | 192.168.1.1 |  
+
+ETHERNET:
+
++ | 02:00:00:00:00:00 | 02:00:00:00:00:01 | 98 | data | crc | 
+
+- | 02:00:00:00:00:01 | 02:00:00:00:00:00 | 98 | data | crc |
+
++ | 02:00:00:00:00:00 | 02:00:00:00:00:01 | 98 | data | crc | 
+
++ | 02:00:00:00:00:00 | 02:00:00:00:00:01 | 110 | data | crc | 
+
+- | 02:00:00:00:00:01 | 02:00:00:00:00:00 | 108 | data | crc |
+
++ | 02:00:00:00:00:00 | 02:00:00:00:00:01 | 114 | data | crc | 
+
+- | 02:00:00:00:00:01 | 02:00:00:00:00:00 | 112 | data | crc |
